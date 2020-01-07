@@ -3,7 +3,6 @@ parameters:
   os: linux
   architecture: x64
   coverage: false
-  wheel_tags: false
   additional_variables: {}
   pre_test: []
   name_postfix: ''
@@ -74,9 +73,12 @@ jobs:
 
   - ${{ if eq(parameters.coverage, false) }}:
     - script: tox
-      displayName: run tox
+      displayName: Run tox
 
   - ${{ if eq(parameters.coverage, true) }}:
     - script: tox -- --cov
-      displayName: run tox with coverage
+      displayName: Run tox with coverage
 
+    - script: |
+        bash <(curl -s https://codecov.io/bash)
+      displayName: 'Upload to codecov.io'
