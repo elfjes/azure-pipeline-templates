@@ -76,7 +76,7 @@ jobs:
       displayName: Run tox
 
   - ${{ if eq(parameters.coverage, true) }}:
-    - script: tox -- --cov
+    - script: tox -- --cov --cov-report=xml
       displayName: Run tox with coverage
 
     - script: |
