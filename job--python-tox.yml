@@ -3,6 +3,7 @@ parameters:
   os: linux
   architecture: x64
   coverage: false
+  coverage_ref: refs/tags/master
   additional_variables: {}
   pre_test: []
   name_postfix: ''
@@ -80,6 +81,7 @@ jobs:
       displayName: Run tox with coverage
 
     - script: |
-        ls -la
+
         bash <(curl -s https://codecov.io/bash)
       displayName: 'Upload to codecov.io'
+      condition: eq(variables['Build.SourceBranch'], parameters.coverage_tag)
