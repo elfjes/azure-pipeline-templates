@@ -71,25 +71,12 @@ jobs:
 
   - script: python -m pip install --upgrade tox setuptools virtualenv
     displayName: install tox
-  - script: tox
-    displayName: run tox
+
+  - ${{ if eq(parameters.coverage, false) }}:
+    - script: tox
+      displayName: run tox
 
   - ${{ if eq(parameters.coverage, true) }}:
-    - bash: .tox/$(TOXENV)/$(bindir)/coverage xml -o coverage.xml
-      displayName: generate coverage xml
-    - task: PublishCodeCoverageResults@1
-      inputs:
-        codeCoverageTool: cobertura
-        summaryFileLocation: coverage.xml
-      displayName: publish coverage artifact
+    - script: tox -- --cov
+      displayName: run tox with coverage
 
-  - ${{ if eq(parameters.wheel_tags, true) }}:
-    - bash: .tox/$(TOXENV)/$(bindir)/pip wheel --no-deps . -w wheels
-      displayName: build wheel
-      condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/')
-    - task: PublishBuildArtifacts@1
-      condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/')
-      inputs:
-        pathToPublish: wheels
-        artifactName: wheel_${{ parameters.os }}_$(TOXENV)${{ parameters.name_postfix }}
-      displayName: publish wheel artifact
