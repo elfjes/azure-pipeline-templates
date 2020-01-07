@@ -80,5 +80,6 @@ jobs:
       displayName: Run tox with coverage
 
     - script: |
+        ls -la
         bash <(curl -s https://codecov.io/bash)
       displayName: 'Upload to codecov.io'
